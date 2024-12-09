@@ -1,21 +1,29 @@
 <?php
 
+use App\Models\MhsPkl;
+use App\Models\BimbinganPkl;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\MhsPklController;
 use App\Http\Controllers\VerPklController;
 use App\Http\Controllers\BackendController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RuanganController;
+use App\Http\Controllers\NilaiPklController;
 use App\Http\Controllers\PimpinanController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\TempatPKLController;
 use App\Http\Controllers\UsulanPklController;
+use App\Http\Controllers\BimbinganPklController;
+use App\Http\Controllers\JadwalSidangController;
 use App\Http\Controllers\JabatanPimpinanController;
+use App\Http\Controllers\NilaiPembimbingController;
+use App\Http\Controllers\KonfirmasiUsulanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,9 +154,16 @@ Route::get('usulan_pkl/create', [UsulanPklController::class, 'create'])->name('u
 Route::post('usulan_pkl', [UsulanPklController::class, 'store'])->name('usulan_pkl.store');
 Route::get('usulan_pkl/{id}/edit', [UsulanPklController::class, 'edit'])->name('usulan_pkl.edit');
 Route::put('usulan_pkl/{id}', [UsulanPklController::class, 'update'])->name('usulan_pkl.update');
-Route::delete('usulan_pkl/{id}', [UsulanPklController::class, 'destroy'])->name('usulan_pkl.destroy');
-Route::post('usulan_pkl/{id}/konfirmasi', [UsulanPKLController::class, 'konfirmasi'])->name('usulan_pkl.konfirmasi');
+Route::delete('/usulan_pkl/{id}', [UsulanPKLController::class, 'destroy'])->name('usulan_pkl.destroy');
+// Route::put('/usulan_pkl/{usulan_pkl}/assign_dosen', [UsulanPklController::class, 'assignDosen'])->name('usulan_pkl.assign_dosen');
+Route::post('/usulan-pkl/{id}/konfirmasi', [UsulanPklController::class, 'konfirmasi'])->name('usulan_pkl.konfirmasi');
+Route::post('/usulan-pkl/{usulan_pkl}/assign-dosen', [UsulanPklController::class, 'assignDosen'])->name('usulan_pkl.assignDosen');
 
+
+
+Route::get('/mhs_pkl/edit', [MhsPklController::class, 'edit'])->name('mhs_pkl.edit');
+Route::put('mhs_pkl/{id}', [MhsPklController::class, 'update'])->name('mhs_pkl.update');
+Route::get('/daftar_pkl', [MhsPklController::class, 'daftarPkl'])->name('daftar_pkl');
 
 
 Route::get('/ver_pkl', [VerPklController::class, 'index'])->name('ver_pkl.index');
@@ -158,4 +173,42 @@ Route::get('/ver_pkl/{id_ver_pkl}/edit', [VerPklController::class, 'edit'])->nam
 Route::put('/ver_pkl/{id_ver_pkl}', [VerPklController::class, 'update'])->name('ver_pkl.update');
 Route::delete('/ver_pkl/{id_ver_pkl}', [VerPklController::class, 'destroy'])->name('ver_pkl.destroy');
 Route::post('ver_pkl/{id}/confirm', [VerPklController::class, 'confirm'])->name('ver_pkl.confirm');
+
+
+
+
+Route::get('/konfirmasi_pkl', [KonfirmasiUsulanController::class, 'index'])->name('konfirmasi_pkl.index');
+Route::post('/usulan-pkl/{usulan_pkl}/pilih-dosen', [KonfirmasiUsulanController::class, 'pilihDosen'])->name('konfirmasi_usulan_pkl.pilih_dosen');
+Route::get('/konfirmasi_usulan_pkl', [KonfirmasiUsulanController::class, 'index'])->name('konfirmasi_usulan_pkl.index');
+
+
+Route::get('/bimbingan_pkl', [BimbinganPklController::class, 'index'])->name('bimbingan_pkl.index');
+Route::get('/bimbingan_pkl/create', [BimbinganPklController::class, 'create'])->name('bimbingan_pkl.create');
+Route::post('/bimbingan_pkl', [BimbinganPklController::class, 'store'])->name('bimbingan_pkl.store');
+Route::get('/bimbingan_pkl/{id}/edit', [BimbinganPklController::class, 'edit'])->name('bimbingan_pkl.edit');
+Route::put('/bimbingan_pkl/{id}', [BimbinganPklController::class, 'update'])->name('bimbingan_pkl.update');
+Route::delete('/bimbingan_pkl/{id}', [BimbinganPklController::class, 'destroy'])->name('bimbingan_pkl.destroy');
+Route::get('/bimbingan-pkl/dosen', [BimbinganPklController::class, 'indexDosen'])->name('bimbingan_pkl.dosen');
+Route::get('/bimbingan-pkl/{id}/nilai', [BimbinganPklController::class, 'nilai'])->name('bimbingan_pkl.nilai');
+Route::put('/bimbingan-pkl/konfirmasi/{id}', [BimbinganPklController::class, 'konfirmasi'])->name('bimbingan_pkl.konfirmasi');
+// Route::get('/bimbingan-pkl/konfirmasi/{id}', [BimbinganPklController::class, 'konfirmasi'])->name('bimbingan_pkl.konfirmasi');
+Route::get('/bimbingan_pkl/logbook/{id}', [BimbinganPKLController::class, 'logbook'])->name('bimbingan_pkl.logbook');
+Route::get('/bimbingan_pkl/logbook', [BimbinganPklController::class, 'logbook'])->name('bimbingan.logbook');
+
+Route::post('nilai_bimbingan_pkl/{id}/update_nilai', [NilaiPembimbingController::class, 'updateNilai'])->name('bimbingan_pkl.update_nilai');
+
+Route::get('/nilai_pembimbing/{id}/edit', [NilaiPembimbingController::class, 'edit'])->name('nilai_pembimbing.edit');
+Route::put('/nilai_pembimbing/{id}/update', [NilaiPembimbingController::class, 'update'])->name('nilai_pembimbing.update');
+
+
+// Route::post('/nilai-bimbingan', [NilaiPembimbingController::class, 'store'])->name('nilai_bimbingan.store');
+Route::post('/jadwal_sidang', [JadwalSidangController::class, 'store'])->name('jadwal_sidang.store');
+Route::patch('/jadwal_sidang/{id}/konfirmasi', [JadwalSidangController::class, 'konfirmasi'])->name('jadwal_sidang.konfirmasi');
+
+Route::get('/mhs-pkl/{id}/pdf', [MhsPklController::class, 'generatePdf'])->name('mhs_pkl.pdf');
+
+
+Route::get('/nilai_pkl/{id}', [NilaiPklController::class, 'edit'])->name('admin.mhs_pkl.nilai_pkl');
+Route::post('/nilai_pkl/{id}', [NilaiPklController::class, 'update'])->name('admin.mhs_pkl.nilai_pkl.update');
+Route::get('nilai_pkl', [NilaiPklController::class, 'index'])->name('admin.mhs_pkl.index');
 

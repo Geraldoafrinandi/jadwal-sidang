@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Mahasiswa::class, 'user_id', 'id'); // Sesuaikan dengan nama kolom yang tepat
     }
+    public function dosen()
+{
+    return $this->hasOne(Dosen::class, 'user_id'); // Pastikan field yang digunakan benar
+}
+
 }

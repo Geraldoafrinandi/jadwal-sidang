@@ -34,8 +34,8 @@ class TempatPKLController extends Controller
 
     public function edit($id)
     {
-        $tempatPKL = TempatPkl::findOrFail($id);
-        return view('admin.tempat_pkl.edit', compact('tempatPKL'));
+        $tempatPkl = TempatPkl::findOrFail($id); // Sesuaikan nama variabel
+        return view('admin.tempat_pkl.edit', compact('tempatPkl'));
     }
 
     public function update(Request $request, $id)
@@ -47,8 +47,8 @@ class TempatPKLController extends Controller
             'status' => 'required|in:0,1',
         ]);
 
-        $tempatPKL = TempatPkl::findOrFail($id);
-        $tempatPKL->update($request->all());
+        $tempatPkl = TempatPkl::findOrFail($id);
+        $tempatPkl->update($request->all());
 
         return redirect()->route('tempat_pkl.index')->with('success', 'Data tempat PKL berhasil diperbarui.');
     }

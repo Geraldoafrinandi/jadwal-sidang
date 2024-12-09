@@ -16,13 +16,15 @@ class VerPklController extends Controller
         if (Auth::user()->role == 'admin') {
 
             $ver_pkl = VerPkl::all();
+            $dataVerifikasi = false;
         } else {
 
             $mahasiswa_id = Auth::user()->mahasiswa->id_mahasiswa;
             $ver_pkl = VerPkl::where('mahasiswa_id', $mahasiswa_id)->get();
+            $dataVerifikasi = \App\Models\VerPkl::where('mahasiswa_id', $mahasiswa_id)->exists();
         }
 
-        return view('admin.ver_pkl.index', compact('ver_pkl'));
+        return view('admin.ver_pkl.index', compact('ver_pkl','dataVerifikasi'));
     }
 
 
@@ -32,7 +34,7 @@ class VerPklController extends Controller
         $user = Auth::user();
         $mahasiswa = $user->mahasiswa;
         if (!$mahasiswa) {
-            return redirect()->back()->with('error', 'Data mahasiswa tidak ditemukan. Silakan hubungi admin.'); // Pesan kesalahan jika tidak ada mahasiswa
+            return redirect()->back()->with('error', 'Data mahasiswa tidak ditemukan. Silakan hubungi admin.');
         }
 
         return view('admin.ver_pkl.create', compact('mahasiswa'));

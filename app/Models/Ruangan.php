@@ -15,4 +15,9 @@ class Ruangan extends Model
     protected $fillable = [
         'ruangan',
     ];
+
+    public function mhsPKL()
+    {
+        return $this->hasMany(MhsPKL::class, 'ruangan');
+    }
 }

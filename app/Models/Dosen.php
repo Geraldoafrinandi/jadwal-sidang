@@ -38,6 +38,24 @@ class Dosen extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function pklPembimbing()
+    {
+        return $this->hasMany(MhsPkl::class, 'dosen_pembimbing');
+    }
+
+    public function pklPenguji()
+    {
+        return $this->hasMany(MhsPkl::class, 'dosen_penguji');
+    }
+    public function usulanPkl()
+    {
+        return $this->hasMany(UsulanPkl::class, 'dosen_pembimbing');
+    }
+    public function nilaiPkl()
+    {
+        return $this->hasMany(NilaiPkl::class, 'status', 'id_dosen');
+    }
+
     protected static function boot()
     {
         parent::boot();

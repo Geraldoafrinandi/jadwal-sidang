@@ -33,6 +33,25 @@ class Mahasiswa extends Model
     // Mahasiswa.php
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+
+    public function mahasiswa()
+{
+    return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'id');
+}
+
+
+    public function usulanPKL()
+    {
+        return $this->hasMany(UsulanPKL::class, 'mahasiswa_id');
+    }
+
+    public function mhsPkl()
+    {
+        return $this->hasOne(MhsPkl::class, 'mahasiswa_id');
+    }
+ 
+
 }

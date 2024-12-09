@@ -2,8 +2,12 @@
 
 @section('content')
     <div class="container mt-4">
-        <h1>Data Verifikasi PKL</h1>
+        @if (Auth::check() && (Auth::user()->role == 'dosen' || Auth::user()->role == 'admin'))
+        <h2>Data Verifikasi PKL</h2>
+        @endif
+        @if(!$dataVerifikasi)
         <a href="{{ route('ver_pkl.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+    @endif
 
         @if (session('success'))
             <div class="alert alert-success mt-3 text-white">
@@ -46,10 +50,14 @@
                                     </a>
                                 </td>
 
-                                <td style="color: {{ $item->status == '1' ? 'green' : 'red' }};">
-                                    {{ $item->status == '1' ? 'Diverifikasi' : 'Belum Diverifikasi' }}
-
+                                <td>
+                                    @if ($item->status == '1')
+                                        <span class="badge bg-success mt-2">Diverifikasi</span>
+                                    @else
+                                        <span class="badge bg-danger mt-2">Belum Diverifikasi</span>
+                                    @endif
                                 </td>
+
 
                                 @if (Auth::check() && (Auth::user()->role == 'dosen' || Auth::user()->role == 'admin'))
                                     <td>

@@ -25,5 +25,10 @@ class TempatPKL extends Model
         return $this->hasMany(UsulanPKL::class, 'perusahaan_id', 'id_perusahaan'); // Adjust if renamed
     }
 
+    public function mahasiswa()
+    {
+        return $this->hasMany(Mahasiswa::class, 'tempat_pkl_id', 'id');
+    }
+
     public $timestamps = false;
 }

@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="container mt-4">
-    <h1>Daftar Tempat PKL</h1>
+    <h2>Daftar Tempat PKL</h2>
     <a href="{{ route('tempat_pkl.create') }}" class="btn btn-primary mb-3">Tambah Tempat PKL</a>
 
     @if(session('success'))
-        <div class="alert alert-success mt-3">
+        <div class="alert alert-success mt-3 text-white">
             {{ session('success') }}
         </div>
     @endif
@@ -20,7 +20,7 @@
                 <thead>
                     <tr>
                         <th>Nama Perusahaan</th>
-                        <th>Deskripsi</th>
+                        <th>Alamat</th>
                         <th>Kuota</th>
                         <th>Status</th>
                         <th>Aksi</th>
