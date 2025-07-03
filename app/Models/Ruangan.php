@@ -20,4 +20,8 @@ class Ruangan extends Model
     {
         return $this->hasMany(MhsPKL::class, 'ruangan');
     }
+    public function mhs_ta()
+    {
+        return $this->hasMany(MhsTa::class, 'ruangan_id', 'id_ruangan');
+    }
 }

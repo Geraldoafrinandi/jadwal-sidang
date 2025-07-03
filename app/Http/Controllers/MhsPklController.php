@@ -90,12 +90,14 @@ class MhsPklController extends Controller
             'pembimbing_pkl' => 'required|string|max:255',
             'dokumen_nilai_industri' => 'nullable|file|mimes:pdf',
             'laporan_pkl' => 'nullable|file|mimes:pdf',
+            'nilai_pembimbing_industri' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Update data PKL yang dapat diubah
         $data_pkl->judul = $request->judul;
         $data_pkl->pembimbing_pkl = $request->pembimbing_pkl; // Pembimbing PKL (Dosen)
         $data_pkl->tgl_sidang = $request->tgl_sidang;
+        $data_pkl->nilai_pembimbing_industri = $request->nilai_pembimbing_industri;
 
         // Jika ada file dokumen nilai industri yang diupload
         if ($request->hasFile('dokumen_nilai_industri')) {
@@ -139,31 +141,21 @@ class MhsPklController extends Controller
     }
 
     public function generatePdf($id)
-{
-    $getDosen = Auth::user()->dosen->id_dosen;
-    // Ambil data MhsPkl berdasarkan ID
-    $mhsPkl = MhsPkl::with(['usulanPkl', 'mahasiswa', 'dosenPembimbing', 'dosenPenguji', 'ruang'])
-        ->findOrFail($id);
-
-    // Ambil data Kaprodi berdasarkan jabatan
-    $kaprodi = Pimpinan::with('dosen')
-            ->where('dosen_id', $getDosen)
+    {
+        // $getDosen = Auth::user()->dosen->id_dosen;
+        $mhsPkl = MhsPkl::with(['usulanPkl', 'mahasiswa', 'dosenPembimbing', 'dosenPenguji', 'ruang'])
+            ->findOrFail($id);
+        $kaprodi = Pimpinan::with('dosen')
+            ->where('status_pimpinan', '1')
             ->whereHas('jabatanPimpinan', function ($query) {
                 $query->where('kode_jabatan_pimpinan', 'Kaprodi');
             })
-            ->whereHas('dosen', function ($query) {
-                $query->where('prodi_id', Auth::user()->dosen->prodi_id);
-            })
             ->first();
 
-    // Tentukan nama file PDF
-    $fileName = 'Laporan_MhsPkl_' . $mhsPkl->id_mhs_pkl . '.pdf';
+        $fileName = 'Laporan_MhsPkl_' . $mhsPkl->id_mhs_pkl . '.pdf';
 
-    // Load view dan passing data ke view
-    $pdf = Pdf::loadView('admin.surat_tugas', compact('mhsPkl', 'kaprodi'));
+        $pdf = Pdf::loadView('admin.surat_tugas', compact('mhsPkl', 'kaprodi'));
 
-    // Return response untuk download file PDF
-    return $pdf->stream($fileName);
-}
-
+        return $pdf->stream($fileName);
+    }
 }

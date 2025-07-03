@@ -18,4 +18,9 @@ class Sesi extends Model
     ];
 
     public $timestamps = false;
+
+    public function mhs_ta()
+    {
+        return $this->hasMany(MhsTa::class, 'ruangan_id', 'id_ruangan');
+    }
 }

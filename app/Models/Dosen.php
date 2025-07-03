@@ -55,6 +55,10 @@ class Dosen extends Model
     {
         return $this->hasMany(NilaiPkl::class, 'status', 'id_dosen');
     }
+    public function mhsSempro()
+    {
+        return $this->hasMany(MhsSempro::class, 'dosen_id');
+    }
 
     protected static function boot()
     {

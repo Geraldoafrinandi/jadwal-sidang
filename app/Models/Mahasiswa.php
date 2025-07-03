@@ -52,6 +52,10 @@ class Mahasiswa extends Model
     {
         return $this->hasOne(MhsPkl::class, 'mahasiswa_id');
     }
- 
+    public function mhsSempro()
+    {
+        return $this->hasOne(MhsSempro::class, 'mahasiswa_id','id_mahasiswa');
+    }
+
 
 }

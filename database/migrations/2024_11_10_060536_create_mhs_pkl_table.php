@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('dosen_pembimbing')->nullable();
             $table->unsignedBigInteger('dosen_penguji')->nullable();
             $table->date('tgl_sidang')->nullable();
+            $table->string('nilai_mahasiswa')->nullable();
             $table->unsignedBigInteger('jam')->nullable();
 
             // Menambahkan foreign key di sini

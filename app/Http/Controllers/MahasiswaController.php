@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\MhsTa;
 use App\Models\Prodi;
-use App\Models\Mahasiswa;
 // use App\Exports\ExportMahasiswa;
+use App\Models\Mahasiswa;
+use App\Models\MhsSempro;
 use Illuminate\Http\Request;
 use App\Exports\MahasiswaExport;
 use App\Imports\ImportMahasiswa;
 use App\Imports\MahasiswaImport;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Redirect;
@@ -203,4 +206,6 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::with('prodi')->findOrFail($id_mahasiswa);
         return view('admin.mahasiswa.show', compact('mahasiswa'));
     }
+
+    
 }

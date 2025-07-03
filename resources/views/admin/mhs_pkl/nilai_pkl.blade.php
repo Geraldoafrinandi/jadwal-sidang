@@ -38,12 +38,26 @@
                                         <td>{{ $mhs->usulanPkl->tempatPKL->nama_perusahaan ?? 'Tidak ada data' }}</td>
                                         <td>
                                             {{ $mhs->dosenPembimbing->nama_dosen ?? 'Tidak ada data' }} -
-                                            {{ $mhs->nilaiPkl && $mhs->nilaiPkl->where('status', "0")->first() ? $mhs->nilaiPkl->where('status', "0")->first()->total_nilai : 'Belum ada nilai' }}
+                                            @if ($mhs->nilaiPkl && $mhs->nilaiPkl->where('status', "0")->first())
+                                                <span class="badge bg-success">
+                                                    {{ $mhs->nilaiPkl->where('status', "0")->first()->total_nilai }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger">Belum ada nilai</span>
+                                            @endif
                                         </td>
+
                                         <td>
                                             {{ $mhs->dosenPenguji->nama_dosen ?? 'Tidak ada data' }} -
-                                            {{ $mhs->nilaiPkl && $mhs->nilaiPkl->where('status', "1")->first() ? $mhs->nilaiPkl->where('status', "1")->first()->total_nilai : 'Belum ada nilai' }}
+                                            @if ($mhs->nilaiPkl && $mhs->nilaiPkl->where('status', "1")->first())
+                                                <span class="badge bg-success">
+                                                    {{ $mhs->nilaiPkl->where('status', "1")->first()->total_nilai }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-danger">Belum ada nilai</span>
+                                            @endif
                                         </td>
+
 
 
                                         <td>
@@ -73,36 +87,37 @@
                                                         <div class="mb-3">
                                                             <label for="bahasa" class="form-label">Bahasa</label>
                                                             <input type="number" class="form-control" id="bahasa"
-                                                                   name="bahasa" value="" min="0" max="100">
+                                                                   name="bahasa"  value="{{ $mhs->nilaiPkl->isNotEmpty() ? $mhs->nilaiPkl->first()->bahasa : '' }}"
+                                                                   min="0" max="100">
                                                         </div>
 
                                                         <div class="mb-3">
                                                             <label for="analisis" class="form-label">Analisis</label>
                                                             <input type="number" class="form-control" id="analisis"
-                                                                name="analisis" value="" min="0"
+                                                                name="analisis" value="{{ $mhs->nilaiPkl->isNotEmpty() ? $mhs->nilaiPkl->first()->analisis : '' }}" min="0"
                                                                 max="100">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="sikap" class="form-label">Sikap</label>
                                                             <input type="number" class="form-control" id="sikap"
-                                                                name="sikap" value="" min="0" max="100">
+                                                                name="sikap" value="{{ $mhs->nilaiPkl->isNotEmpty() ? $mhs->nilaiPkl->first()->sikap : '' }}" min="0" max="100">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="komunikasi" class="form-label">Komunikasi</label>
                                                             <input type="number" class="form-control" id="komunikasi"
-                                                                name="komunikasi" value="" min="0"
+                                                                name="komunikasi" value="{{ $mhs->nilaiPkl->isNotEmpty() ? $mhs->nilaiPkl->first()->komunikasi : '' }}" min="0"
                                                                 max="100">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="penyajian" class="form-label">Penyajian</label>
                                                             <input type="number" class="form-control" id="penyajian"
-                                                                name="penyajian" value="" min="0"
+                                                                name="penyajian" value="{{ $mhs->nilaiPkl->isNotEmpty() ? $mhs->nilaiPkl->first()->penyajian : '' }}" min="0"
                                                                 max="100">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="penguasaan" class="form-label">Penguasaan</label>
                                                             <input type="number" class="form-control" id="penguasaan"
-                                                                name="penguasaan" value="" min="0"
+                                                                name="penguasaan" value="{{ $mhs->nilaiPkl->isNotEmpty() ? $mhs->nilaiPkl->first()->penguasaan : '' }}" min="0"
                                                                 max="100">
                                                         </div>
                                                     </div>

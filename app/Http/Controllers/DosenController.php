@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Dosen;
+use App\Models\MhsTa;
 use App\Models\Prodi;
 use App\Models\Jurusan;
+use App\Models\Mahasiswa;
+use App\Models\MhsSempro;
 use App\Exports\DosenExport;
 use App\Imports\DosenImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,6 +26,10 @@ class DosenController extends Controller
         $dosen = Dosen::with(['jurusan', 'prodi'])->get();
         return view('admin.dosen.index', compact('dosen'));
     }
+
+
+    
+
 
     public function export()
     {
@@ -60,52 +68,52 @@ class DosenController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Validasi input form
-    $request->validate([
-        'nama_dosen' => 'required|string|max:255',
-        'nidn' => 'required|unique:dosen,nidn|max:20',
-        'gender' => 'required|in:0,1', // Misalnya 0 untuk perempuan dan 1 untuk laki-laki
-        'jurusan_id' => 'required|exists:jurusan,id_jurusan', // Pastikan jurusan_id valid
-        'prodi_id' => 'required|exists:prodi,id_prodi', // Pastikan prodi_id valid
-        'golongan' => 'required|in:1,2,3,4',
-        'status_dosen' => 'required|in:0,1', // Pastikan status sesuai
-        'email' => 'required|email|unique:users,email|max:255', // Validasi email agar unik
-        'password' => 'required|string|min:6', // Validasi password minimal 6 karakter
-        'image' => 'nullable|image|max:2048',
-    ]);
+    {
+        // Validasi input form
+        $request->validate([
+            'nama_dosen' => 'required|string|max:255',
+            'nidn' => 'required|unique:dosen,nidn|max:20',
+            'gender' => 'required|in:0,1', // Misalnya 0 untuk perempuan dan 1 untuk laki-laki
+            'jurusan_id' => 'required|exists:jurusan,id_jurusan', // Pastikan jurusan_id valid
+            'prodi_id' => 'required|exists:prodi,id_prodi', // Pastikan prodi_id valid
+            'golongan' => 'required|in:1,2,3,4',
+            'status_dosen' => 'required|in:0,1', // Pastikan status sesuai
+            'email' => 'required|email|unique:users,email|max:255', // Validasi email agar unik
+            'password' => 'required|string|min:6', // Validasi password minimal 6 karakter
+            'image' => 'nullable|image|max:2048',
+        ]);
 
-    // Buat user baru dengan role dosen
-    $user = User::create([
-        'name' => $request->nama_dosen,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => 'dosen', // Tetapkan role sebagai 'dosen'
-    ]);
+        // Buat user baru dengan role dosen
+        $user = User::create([
+            'name' => $request->nama_dosen,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'dosen', // Tetapkan role sebagai 'dosen'
+        ]);
 
-    // Simpan data dosen
-    $dosen = new Dosen;
-    $dosen->nama_dosen = $request->nama_dosen;
-    $dosen->nidn = $request->nidn;
-    $dosen->gender = $request->gender;
-    $dosen->jurusan_id = $request->jurusan_id;
-    $dosen->prodi_id = $request->prodi_id;
-    $dosen->golongan = $request->golongan;
-    $dosen->status_dosen = $request->status_dosen;
-    $dosen->user_id = $user->id; // Menyimpan id user yang baru dibuat
+        // Simpan data dosen
+        $dosen = new Dosen;
+        $dosen->nama_dosen = $request->nama_dosen;
+        $dosen->nidn = $request->nidn;
+        $dosen->gender = $request->gender;
+        $dosen->jurusan_id = $request->jurusan_id;
+        $dosen->prodi_id = $request->prodi_id;
+        $dosen->golongan = $request->golongan;
+        $dosen->status_dosen = $request->status_dosen;
+        $dosen->user_id = $user->id; // Menyimpan id user yang baru dibuat
 
-    // Upload image jika ada
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->move(public_path('images/dosen'), $imageName);
-        $dosen->image = $imageName;
+        // Upload image jika ada
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/dosen'), $imageName);
+            $dosen->image = $imageName;
+        }
+
+        $dosen->save();
+
+        return redirect()->route('dosen.index')->with('success', 'Dosen berhasil ditambahkan beserta akun login.');
     }
-
-    $dosen->save();
-
-    return redirect()->route('dosen.index')->with('success', 'Dosen berhasil ditambahkan beserta akun login.');
-}
 
 
 

@@ -24,6 +24,13 @@ use App\Http\Controllers\JadwalSidangController;
 use App\Http\Controllers\JabatanPimpinanController;
 use App\Http\Controllers\NilaiPembimbingController;
 use App\Http\Controllers\KonfirmasiUsulanController;
+use App\Http\Controllers\MhsSemproController;
+use App\Http\Controllers\MhsTaController;
+use App\Http\Controllers\NilaiSemproController;
+use App\Http\Controllers\NilaiTaController;
+use App\Models\Dosen;
+use App\Models\MhsTa;
+use App\Models\NilaiSempro;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,13 +47,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/grafik', [BackendController::class, 'index'])->name('backend.index');
-
-
 Route::get('/backend', function () {
     return view('admin.layout.main');
-})->middleware('auth');
+});
+Route::get('/grafik', [BackendController::class, 'index'])->name('backend.index');
+
+Route::get('/dashboard/admin', [BackendController::class, 'dashboardAdmin'])->name('dashboard.admin');
+
 
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
 Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -59,6 +66,7 @@ Route::get('/login', [LoginController::class, 'create'])->name('login.create');
 Route::post('/login', [LoginController::class, 'store']);
 Route::post('/logout', [LoginController::class, 'destroy'])->name('logout')->middleware('auth');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
+
 
 Route::get('/register', [RegisterController::class, 'create'])->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
@@ -73,6 +81,7 @@ Route::delete('/mahasiswa/{id_mahasiswa}', [MahasiswaController::class, 'destroy
 Route::get('/mahasiswa/{id_mahasiswa}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
 Route::get('/mahasiswa/export/excel', [MahasiswaController::class, 'export'])->name('mahasiswa.export.excel');
 Route::post('/mahasiswa/import', [MahasiswaController::class, 'import'])->name('mahasiswa.import');
+Route::get('/dashboard/mahasiswa', [BackendController::class, 'dashboardMhs'])->name('dashboard.mahasiswa');
 
 
 
@@ -86,6 +95,7 @@ Route::delete('/dosen/{id_dosen}', [DosenController::class, 'destroy'])->name('d
 Route::get('/dosen/{id_dosen}', [DosenController::class, 'show'])->name('dosen.show');
 Route::get('/dosen/export/excel', [DosenController::class, 'export'])->name('dosen.export');
 Route::post('/dosen/import', [DosenController::class, 'import'])->name('dosen.import');
+Route::get('/dashboard/dosen', [BackendController::class, 'dashboardDosen'])->name('dashboard.dosen');
 
 
 
@@ -212,3 +222,30 @@ Route::get('/nilai_pkl/{id}', [NilaiPklController::class, 'edit'])->name('admin.
 Route::post('/nilai_pkl/{id}', [NilaiPklController::class, 'update'])->name('admin.mhs_pkl.nilai_pkl.update');
 Route::get('nilai_pkl', [NilaiPklController::class, 'index'])->name('admin.mhs_pkl.index');
 
+Route::get('/sempro', [MhsSemproController::class, 'index'])->name('sempro.index');
+Route::post('/sempro', [MhsSemproController::class, 'store'])->name('sempro.store');
+Route::delete('/sempro/{id}', [MhsSemproController::class, 'destroy'])->name('sempro.destroy');
+Route::get('/sempro/edit', [MhsSemproController::class, 'show'])->name('sempro.edit');
+Route::put('/sempro/{id}/update', [MhsSemproController::class, 'update'])->name('sempro.update');
+Route::post('/sempro/konfirmasi/{id}', [MhsSemproController::class, 'konfirmasi'])->name('sempro.konfirmasi');
+Route::post('sempro/upload/{id}', [MhsSemproController::class, 'uploadFile'])->name('sempro.upload');
+Route::get('/sempro-dosen', [MhsSemproController::class, 'indexDosen'])->name('sempro.dosen');
+
+Route::get('/mhs-sempro/{id}/pdf', [MhsSemproController::class, 'suratTugasSempro'])->name('mhs_sempro.pdf');
+
+
+Route::post('/nilai_sempro/{id}/nilai', [NilaiSemproController::class, 'storeNilai'])->name('sempro.nilai.store');
+Route::get('/nilai_sempro/{id}/create', [NilaiSemproController::class, 'createNilaiSempro'])->name('nilai.sempro.create');
+
+
+Route::get('/ta_mhs', [MhsTaController::class, 'indexMhs'])->name('ta.index.mhs');
+Route::post('/ta_mhs/store', [MhsTaController::class, 'store'])->name('ta.store.mhs');
+Route::post('/ta_mhs/konfirmasi/{id}', [MhsTaController::class, 'konfirmasi'])->name('ta.konfirmasi');
+Route::get('/ta_kaprodi', [MhsTaController::class, 'indexKaprodi'])->name('ta.kaprodi');
+Route::get('/ta_dosen', [MhsTaController::class, 'indexDosen'])->name('ta.dosen');
+Route::put('/ta/{id}/update', [MhsTaController::class, 'update'])->name('ta.update');
+Route::get('/mhs-ta/{id}/pdf', [MhsTaController::class, 'suratTugasTa'])->name('mhs_ta.pdf');
+
+
+Route::post('/nilai/{id}/nilai', [NilaiTaController::class, 'storeNilai'])->name('ta.nilai.store');
+Route::get('/nilai/{id}/create', [NilaiTaController::class, 'create'])->name('ta.nilai.create');

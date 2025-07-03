@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
 
-        <!-- Menampilkan pesan sukses/error -->
+
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show text-white" role="alert">
                 <strong>Berhasil!</strong> {{ session('success') }}
@@ -67,7 +67,7 @@
 
                                             @if ($pkl->status_admin == '0')
                                                 <!-- Tombol Konfirmasi -->
-                                                <form action="{{ route('jadwal_sidang.konfirmasi    ', $pkl->id_mhs_pkl) }}"
+                                                <form action="{{ route('jadwal_sidang.konfirmasi', $pkl->id_mhs_pkl) }}"
                                                     method="POST" style="display:inline-block;">
                                                     @csrf
                                                     @method('PATCH')
@@ -84,8 +84,6 @@
                                             @endif
                                         </td>
                                     @endif
-
-
                                 </tr>
                             @endforeach
                         </tbody>

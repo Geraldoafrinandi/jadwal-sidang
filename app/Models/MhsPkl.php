@@ -9,14 +9,11 @@ class MhsPkl extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel jika tidak mengikuti konvensi Laravel
     protected $table = 'mhs_pkl';
     public $timestamps = false;
 
-    // Tentukan primary key jika tidak menggunakan 'id'
     protected $primaryKey = 'id_mhs_pkl';
 
-    // Tentukan kolom yang boleh diisi secara mass-assignment
     protected $fillable = [
         'usulan_id',
         'judul',
@@ -30,8 +27,10 @@ class MhsPkl extends Model
         'dosen_pembimbing',
         'dosen_penguji',
         'tgl_sidang',
+        'nilai_mahasiswa',
         'jam'
     ];
+
 
     // Tentukan relasi dengan model Mahasiswa (usulan_pkl)
     // Relasi dengan model UsulanPkl
@@ -50,7 +49,7 @@ class MhsPkl extends Model
     // Tentukan relasi dengan model Ruang
     public function ruang()
     {
-        return $this->belongsTo(Ruangan::class, 'ruang_sidang','id_ruangan');
+        return $this->belongsTo(Ruangan::class, 'ruang_sidang', 'id_ruangan');
     }
 
     // Tentukan relasi dengan model Dosen untuk Dosen Pembimbing
@@ -75,25 +74,55 @@ class MhsPkl extends Model
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');  // Pastikan 'user_id' adalah kolom yang digunakan
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function bimbinganPkl()
     {
-        return $this->hasMany(BimbinganPkl::class, 'pkl_id', 'id_mhs_pkl'); // Relasi banyak ke satu dengan BimbinganPkl
+        return $this->hasMany(BimbinganPkl::class, 'pkl_id', 'id_mhs_pkl');
     }
 
     public function r_nilai_bimbingan()
     {
-        return $this->hasOne(NilaiPembimbing::class, 'mhs_pkl_id', 'id_mhs_pkl'); // Relasi banyak ke satu dengan BimbinganPkl
+        return $this->hasOne(NilaiPembimbing::class, 'mhs_pkl_id', 'id_mhs_pkl');
     }
 
     public function nilaiPkl()
     {
         return $this->hasMany(NilaiPkl::class, 'mhs_pkl_id');
     }
+
     public function pimpinan()
     {
         return $this->belongsTo(Pimpinan::class, 'dosen_id');
+    }
+    public function nilaiPembimbing()
+    {
+        return $this->hasOne(NilaiPkl::class, 'mhs_pkl_id')->where('status', '0');
+    }
+
+    public function nilaiPenguji()
+    {
+        return $this->hasOne(NilaiPkl::class, 'mhs_pkl_id')->where('status', '1');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        MhsPkl::all()->each(function ($sidangPkl) {
+            $nilaiPembimbing = $sidangPkl->nilaiPembimbing->total_nilai ?? 0;
+            $nilaiPenguji = $sidangPkl->nilaiPenguji->total_nilai ?? 0;
+            $nilaiIndustri = $sidangPkl->nilai_pembimbing_industri ?? 0;
+
+            if ($nilaiPembimbing !== null && $nilaiPenguji !== null && $nilaiIndustri !== null) {
+                $nilaimahasiswa = ($nilaiPembimbing * 0.35) + (($nilaiPembimbing + $nilaiPenguji /2) * 0.35) + ($nilaiIndustri * 0.3);
+
+                $sidangPkl->nilai_mahasiswa = $nilaimahasiswa;
+
+
+                $sidangPkl->save();
+            } else {
+            }
+        });
     }
 
     // public function r_pembimbing_pkl()

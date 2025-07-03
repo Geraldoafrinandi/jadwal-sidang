@@ -9,13 +9,10 @@ class BimbinganPkl extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel
     protected $table = 'bimbingan_pkl';
 
-    // Tentukan primary key jika tidak menggunakan 'id'
     protected $primaryKey = 'id_bimbingan_pkl';
 
-    // Tentukan kolom yang boleh diisi mass-assignable
     protected $fillable = [
         'pkl_id',
         'kegiatan',
@@ -28,18 +25,17 @@ class BimbinganPkl extends Model
 
     public $timestamps = false;
 
-    // Relasi dengan model MhsPkl (relasi banyak ke satu)
     public function mhsPkl()
     {
-        return $this->belongsTo(MhsPkl::class, 'pkl_id', 'id_mhs_pkl'); // Relasi dengan pkl_id di bimbingan_pkl
+        return $this->belongsTo(MhsPkl::class, 'pkl_id', 'id_mhs_pkl');
     }
     public function mahasiswa()
     {
-        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id'); // Relasi dengan mahasiswa_id di bimbingan_pkl
+        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id');
     }
     public function dosen()
     {
-        return $this->belongsTo(MhsPkl::class, 'dosen_pembimbing', 'id_dosen'); // Relasi dengan dosen_id di bimbingan_pkl
+        return $this->belongsTo(MhsPkl::class, 'dosen_pembimbing', 'id_dosen'); 
     }
     public function nilaiBimbingan()
     {
